@@ -20,7 +20,12 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+button[disabled] {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+button:hover:not([disabled]) {
     background-color: #218838;
 }
 
@@ -28,7 +33,8 @@ h2 {
     margin-top: 20px;
 }
 
-#response {
+div {
     font-size: 1.2em;
     color: #333;
+    margin-top: 10px;
 }
