@@ -2,18 +2,20 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Simple Calculator</title>
+    <title>GitHub Token Input</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Simple Calculator</h1>
-    <p>数式を入力してください:</p>
-    <input type="text" id="expression" placeholder="例: 2 + 3 * 4 / 2">
-    <button id="calculateBtn">計算</button>
-    <h2>結果:</h2>
-    <div id="result"></div>
+    <h1>GitHub Token Input</h1>
+    <form id="githubForm">
+        <input type="password" id="token" placeholder="GitHubトークンを入力" required>
+        <input type="text" id="expression" placeholder="計算式 (例: 2 + 3)" required>
+        <input type="text" id="result" placeholder="計算結果 (例: 5)" required>
+        <button type="submit">GitHubにプッシュ</button>
+    </form>
 
-    <!-- 外部のJavaScriptファイルを読み込む -->
+    <h2 id="response"></h2>
+
     <script src="script.js"></script>
 </body>
 </html>
