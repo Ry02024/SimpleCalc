@@ -48,7 +48,7 @@ document.getElementById('pushForm').addEventListener('submit', async function(ev
     const contentBase64 = btoa(unescape(encodeURIComponent(content)));
 
     try {
-        const response = await fetch('https://api.github.com/repos/YourGitHubUsername/YourRepoName/contents/calculation_result.txt', {
+        const response = await fetch('https://api.github.com/repos/Ry02024/SimpleCalc/contents/calculation_result.txt', {
             method: 'PUT',
             headers: {
                 'Authorization': `token ${token}`,
