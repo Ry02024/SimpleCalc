@@ -1,57 +1,37 @@
-document.getElementById('pushForm').addEventListener('submit', async function(event) {
+document.getElementById('tokenForm').addEventListener('submit', async function(event) {
     event.preventDefault();
+    console.log('Token form submitted'); // フォームが送信されたことを確認
+
     const token = document.getElementById('token').value;
-    const expression = document.getElementById('expression').value;
-    const result = document.getElementById('result').value;
-
-    const content = `式: ${expression}\n結果: ${result}`;
-    const contentBase64 = btoa(unescape(encodeURIComponent(content)));
-
-    const filePath = 'calculation_result.txt';
-    const repoUrl = `https://api.github.com/repos/Ry02024/SimpleCalc/contents/${filePath}`;
+    console.log('Token:', token); // トークンが正しく取得されているかを確認
 
     try {
-        // まず、既存ファイルのSHAを取得
-        const getFileResponse = await fetch(repoUrl, {
+        const response = await fetch('https://api.github.com/user', {
             method: 'GET',
             headers: {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json'
+                'Authorization': `token ${token}`
             }
         });
 
-        let sha = null;
-        if (getFileResponse.ok) {
-            const fileData = await getFileResponse.json();
-            sha = fileData.sha;
-        } else if (getFileResponse.status !== 404) {
-            // 404エラー以外のエラーが発生した場合
-            document.getElementById('pushResponse').textContent = `ファイルの取得に失敗しました: ${getFileResponse.statusText}`;
-            return;
-        }
-
-        // ファイルを新規作成または更新
-        const response = await fetch(repoUrl, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                message: "Add calculation result",
-                content: contentBase64,
-                sha: sha  // 既存ファイルの場合はSHAを指定
-            })
-        });
+        console.log('GitHub API response status:', response.status); // APIリクエストのステータスを確認
 
         if (response.ok) {
-            document.getElementById('pushResponse').textContent = 'ファイルが正常にGitHubにプッシュされました。';
-        } else {
             const data = await response.json();
-            document.getElementById('pushResponse').textContent = `エラー: ${data.message}`;
+            console.log('GitHub user data:', data); // GitHub APIからのレスポンスデータを確認
+            document.getElementById('tokenResponse').textContent = `トークンが有効です。ユーザー名: ${data.login}`;
+            enableCalcForm();
+        } else {
+            console.log('Invalid token response received'); // トークンが無効な場合のログ
+            document.getElementById('tokenResponse').textContent = 'トークンが無効です。再入力してください。';
         }
     } catch (error) {
-        document.getElementById('pushResponse').textContent = `リクエストエラー: ${error.message}`;
+        console.error('Error occurred during token validation:', error.message); // エラーメッセージを表示
+        document.getElementById('tokenResponse').textContent = `エラーが発生しました: ${error.message}`;
     }
 });
+
+function enableCalcForm() {
+    console.log('Enabling calculation form'); // 計算フォームが有効になったことを確認
+    document.getElementById('expression').disabled = false;
+    document.querySelector('#calcForm button').disabled = false;
+}
